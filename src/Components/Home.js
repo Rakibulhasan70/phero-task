@@ -7,6 +7,7 @@ const Home = () => {
     const [pageCount, setPageCount] = useState(0);
     const [page, setPage] = useState(0)
     const [size, setSize] = useState(10)
+    const [searchData, setSearchData] = useState([])
 
 
     useEffect(() => {
@@ -29,10 +30,18 @@ const Home = () => {
             })
     }, [])
 
+    const onChange = e => {
+        const change = e.target.value;
+        console.log(change.toLowerCase());
+        const match = products.filter(search => search.title.includes(change))
+        setSearchData(match)
+    }
+
 
     return (
         <div class="overflow-x-auto">
             <h2>Table Contact</h2>
+            <input type="text" onChange={onChange} />
             <table class="table w-full">
                 <thead>
                     <tr>
@@ -62,9 +71,9 @@ const Home = () => {
                         >{number + 1}</button>)
                 }
                 <select onChange={e => setSize(e.target.value)}>
-                    <option selected value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
+                    <option value="5">5</option>
+                    <option selected value="10">10</option>
+                    <option value="20">20</option>
                     <option value="50">50</option>
                 </select>
             </div>
