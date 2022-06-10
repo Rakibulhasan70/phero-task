@@ -6,24 +6,24 @@ const Home = () => {
     const [products, setProducts] = useState([])
     const [pageCount, setPageCount] = useState(0);
     const [page, setPage] = useState(0)
-    const [size, setSize] = useState(10)
+    const [size, setSize] = useState(5)
     const [searchData, setSearchData] = useState([])
 
 
+
     useEffect(() => {
-        fetch(`http://localhost:5000/data?page=${page}&size=${size}`)
+        fetch(`https://secret-fortress-11551.herokuapp.com/data?page=${page}&size=${size}`)
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 setProducts(data)
+                setSearchData(data)
             })
     }, [page, size])
 
     useEffect(() => {
-        fetch('http://localhost:5000/productCount')
+        fetch('https://secret-fortress-11551.herokuapp.com/productCount')
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 const count = data.count;
                 const pages = Math.ceil(count / 20)
                 setPageCount(pages)
@@ -32,7 +32,6 @@ const Home = () => {
 
     const onChange = e => {
         const change = e.target.value;
-        console.log(change.toLowerCase());
         const match = products.filter(search => search.title.includes(change))
         setSearchData(match)
     }
@@ -41,7 +40,7 @@ const Home = () => {
     return (
         <div class="overflow-x-auto">
             <h2>Table Contact</h2>
-            <input type="text" onChange={onChange} />
+            <input type="text" placeholder='Text' onChange={onChange} />
             <table class="table w-full">
                 <thead>
                     <tr>
@@ -50,18 +49,21 @@ const Home = () => {
                     </tr>
                 </thead>
                 <tbody>
-
                     {
-                        products.map(product => <TableData
+                        searchData.map(product => <TableData
                             key={product._id}
                             product={product}
+
                         >
 
                         </TableData>)
                     }
+
+
                 </tbody>
             </table>
             <div className='pagination w-50 mx-auto my-5'>
+
                 <h5 className='px-3'>Page:</h5>
                 {
                     [...Array(pageCount).keys()]
@@ -71,8 +73,8 @@ const Home = () => {
                         >{number + 1}</button>)
                 }
                 <select onChange={e => setSize(e.target.value)}>
-                    <option value="5">5</option>
-                    <option selected value="10">10</option>
+                    <option selected value="5">5</option>
+                    <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="50">50</option>
                 </select>
